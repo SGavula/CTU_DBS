@@ -1,0 +1,97 @@
+SELECT  ISBN, nazev, rok FROM Kniha
+-- WHERE rok = '2021' OR rok = '2022';
+-- This is eqvivalent code but more in set syntax
+-- WHERE rok IN ('2021', '2022');
+-- WHERE rok NOT IN ('2021', '2022')
+WHERE rok IN ('2021', '2022')
+ORDER BY rok DESC, nazev
+LIMIT 3 OFFSET 2;
+
+SELECT DISTINCT mistnost FROM zamestnanec;
+
+SELECT * FROM zamestnanec
+WHERE mistnost = 'KN-123';
+
+-- Kartezky sucin - to mi da obycajna ciarka
+-- SELECT * FROM exemplar, kniha
+-- WHERE rok = '2021';
+
+-- SELECT * FROM exemplar, kniha
+-- WHERE rok = '2021' AND exemplar.ISBN = kniha.ISBN;
+
+-- preferujeme zapis cez join
+-- SELECT * FROM exemplar JOIN kniha ON exemplar.ISBN = kniha.ISBN
+-- WHERE rok = '2021';
+
+-- ak mame rovnaky nazov toho filter stlpca
+SELECT * FROM exemplar JOIN kniha USING (ISBN)
+WHERE rok = '2021';
+
+-- nevie z ktorej tabulky to ma brat to ISBN
+-- SELECT ISBN, nazev, jmeno, prijmeni
+-- FROM kniha JOIN autor ON kniha.ISBN = autor.ISBN;
+
+-- musime uviest, z ktorej tabulky to chceme brat
+-- SELECT autor.ISBN, nazev, jmeno, prijmeni
+-- FROM kniha JOIN autor ON kniha.ISBN = autor.ISBN;
+
+-- asi nejaka substitucia
+SELECT a.ISBN, k.nazev, a.jmeno, a.prijmeni
+FROM kniha k JOIN autor a ON k.ISBN = a.ISBN;
+
+SELECT ISBN, nazev, jmeno, prijmeni
+FROM kniha k NATURAL JOIN autor a;
+
+SELECT a.ISBN, nazev, jmeno, prijmeni
+FROM kniha k CROSS JOIN autor a;
+
+-- INNER JOIN  --> vnutorne spojenie
+-- LEFT OUTER JOIN --> vonkajsie spojenie
+-- RIGHT OUTER JOIN
+
+SELECT *
+FROM uzivatel LEFT OUTER JOIN osobni_udaje ON uzivatel.login = osobni_udaje.login;
+
+SELECT uzivatel.login
+FROM uzivatel LEFT OUTER JOIN osobni_udaje ON uzivatel.login = osobni_udaje.login
+WHERE osobni_udaje.login IS NULL;
+
+SELECT login FROM uzivatel
+WHERE uzivatel.login NOT IN (SELECT login FROM osobni_udaje);
+
+
+SELECT login, count(*) as pocet
+FROM uzivatel
+    JOIN clensky_prispevek ON uzivatel.login = clensky_prispevek.zakaznik
+GROUP BY login;
+
+SELECT login as pojmenovani, count(*) as pocet
+FROM uzivatel
+         JOIN clensky_prispevek ON uzivatel.login = clensky_prispevek.zakaznik
+GROUP BY login;
+
+SELECT login as pojmenovani, count(zakaznik) as pocet, sum(vyse) as suma, min(od), max(doo)
+FROM uzivatel
+         LEFT OUTER JOIN clensky_prispevek ON uzivatel.login = clensky_prispevek.zakaznik
+GROUP BY login;
+
+SELECT * FROM clensky_prispevek;
+
+SELECT login as pojmenovani, count(zakaznik) as pocet, sum(vyse) as suma
+FROM uzivatel
+    JOIN zakaznik USING (login)
+    JOIN clensky_prispevek ON uzivatel.login = clensky_prispevek.zakaznik
+WHERE cas < '2024-01-01'
+GROUP BY login
+HAVING sum(vyse) > 800
+ORDER BY pocet, login;
+
+
+SELECT DISTINCT nadrizeny, jmeno, prijmeni
+FROM je_nadrizeny
+JOIN osobni_udaje ON nadrizeny = osobni_udaje.login;
+
+SELECT * FROM zamestnanec
+    JOIN je_nadrizeny ON zamestnanec.login = je_nadrizeny.zamestnanec
+    JOIN osobni_udaje ON je_nadrizeny.nadrizeny = osobni_udaje.login
+WHERE jmeno = 'Zdeněk' AND prijmeni = 'Řeřucha';

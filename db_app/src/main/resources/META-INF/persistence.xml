@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
+             version="3.0">
+    <persistence-unit name="ApplicationPU" transaction-type="RESOURCE_LOCAL">
+        <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+        <class>tables.Doporucil</class>
+        <class>tables.DoporucilId</class>
+        <class>tables.Fotografia</class>
+        <class>tables.Kategoria</class>
+        <class>tables.Kupujuci</class>
+        <class>tables.Nehnutelnost</class>
+        <class>tables.OblubenaNehnutelnost</class>
+        <class>tables.Predavajuci</class>
+        <class>tables.Prezera</class>
+        <class>tables.PrezeraId</class>
+        <class>tables.Profil</class>
+        <class>tables.Transakcia</class>
+        <class>tables.TransakciaId</class>
+        <class>tables.Uzivatel</class>
+        <class>tables.InstantAttributeConverter</class>
+        <properties>
+            <property
+                    name="jakarta.persistence.jdbc.url"
+                    value="jdbc:postgresql://slon.felk.cvut.cz:5432/gavulsim"/>
+            <property
+                    name="jakarta.persistence.jdbc.user"
+                    value="gavulsim"/>
+            <property
+                    name="jakarta.persistence.jdbc.driver"
+                    value="org.postgresql.Driver"/>
+            <property
+                    name="jakarta.persistence.jdbc.password"
+                    value="gavulsim_DBS24"/>
+            <property
+                    name="jakarta.persistence.schema-generation.database.action"
+                    value="create"/>
+        </properties>
+    </persistence-unit>
+</persistence>

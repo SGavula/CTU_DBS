@@ -1,0 +1,28 @@
+SELECT nazev, count(ISBN) FROM nalezi_zanru GROUP BY nazev;
+
+SELECT Kniha.nazev, ISBN FROM kniha JOIN nalezi_zanru NZ USING (ISBN)
+WHERE NZ.nazev = 'Česká a slovenská beletrie' OR NZ.nazev = 'Světová beletrie';
+
+SELECT Kniha.nazev, ISBN FROM kniha JOIN nalezi_zanru NZ USING (ISBN)
+WHERE NZ.nazev IN ('Česká a slovenská beletrie', 'Světová beletrie');
+
+SELECT Kniha.nazev, ISBN FROM kniha JOIN nalezi_zanru NZ USING (ISBN)
+WHERE NZ.nazev = 'Česká a slovenská beletrie'
+UNION
+SELECT Kniha.nazev, ISBN FROM kniha JOIN nalezi_zanru NZ USING (ISBN)
+WHERE NZ.nazev = 'Světová beletrie';
+
+SELECT Kniha.nazev, ISBN
+FROM kniha
+WHERE ISBN IN (SELECT ISBN
+               FROM nalezi_zanru NZ
+               WHERE NZ.nazev IN ('Česká a slovenská beletrie', 'Světová beletrie')
+               );
+
+SELECT Kniha.nazev, ISBN
+FROM kniha
+WHERE EXISTS (SELECT *
+               FROM nalezi_zanru NZ
+               WHERE NZ.nazev IN ('Česká a slovenská beletrie', 'Světová beletrie')
+               AND NZ.ISBN = kniha.ISBN
+);
